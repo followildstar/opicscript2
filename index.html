@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오픽 스크립트 트레이너</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">OPIC SCRIPT TRAINER</p>
+        <h1>오픽 스크립트 트레이너</h1>
+        <p class="sub">기본 오픽 스크립트와 내가 직접 올린 영어 스크립트를 질문 카드로 만들고, 말하기 흐름을 연습합니다.</p>
+      </div>
+      <button class="small-btn" id="resetAll" type="button">초기화</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="hero-kicker">오늘의 연습</p>
+          <h2 id="todayQuestion">스크립트를 추가하고 연습을 시작하세요.</h2>
+          <p>질문 확인 → 흐름 암기 → 60초 말하기 → 답변 확인 → 다시 말하기</p>
+        </div>
+        <button class="primary-btn" id="randomPractice" type="button">랜덤 연습</button>
+      </section>
+
+      <section class="stats">
+        <div><strong id="countTotal">0</strong><span>전체 스크립트</span></div>
+        <div><strong id="countDone">0</strong><span>완료</span></div>
+        <div><strong id="countReview">0</strong><span>복습 필요</span></div>
+      </section>
+
+      <nav class="tabs">
+        <button class="tab active" data-view="libraryView" type="button">스크립트 목록</button>
+        <button class="tab" data-view="addView" type="button">스크립트 추가</button>
+        <button class="tab" data-view="reviewView" type="button">복습</button>
+        <button class="tab" data-view="progressView" type="button">기록</button>
+      </nav>
+
+      <section class="view active-view" id="libraryView">
+        <div class="panel filter-panel">
+          <input id="searchInput" type="search" placeholder="질문, 키워드, 카테고리 검색" />
+          <div class="chip-row" id="categoryFilters">
+            <button class="chip active" data-filter="all" type="button">전체</button>
+            <button class="chip" data-filter="자기소개" type="button">자기소개</button>
+            <button class="chip" data-filter="취미" type="button">취미</button>
+            <button class="chip" data-filter="일상" type="button">일상</button>
+            <button class="chip" data-filter="경험" type="button">경험</button>
+            <button class="chip" data-filter="마인드셋" type="button">마인드셋</button>
+            <button class="chip" data-filter="장소" type="button">장소</button>
+            <button class="chip" data-filter="영어공부" type="button">영어공부</button>
+          </div>
+          <div class="tool-row">
+            <button class="ghost-btn" id="flowOnly" type="button">흐름만 보기</button>
+            <button class="ghost-btn" id="closeAnswers" type="button">답변 모두 닫기</button>
+          </div>
+        </div>
+        <div class="cards" id="scriptCards"></div>
+      </section>
+
+      <section class="view" id="addView">
+        <div class="section-title">
+          <h2>스크립트 직접 추가</h2>
+          <p>질문과 영어 답변을 붙여 넣으면, 앱 안에 저장됩니다. 흐름과 키워드는 직접 적어도 되고 비워도 됩니다.</p>
+        </div>
+
+        <form class="panel form" id="scriptForm">
+          <label>질문
+            <input id="questionInput" type="text" placeholder="예: Tell me about your hobbies." required />
+          </label>
+          <label>카테고리
+            <select id="categoryInput">
+              <option>자기소개</option>
+              <option>취미</option>
+              <option>일상</option>
+              <option>경험</option>
+              <option>마인드셋</option>
+              <option>장소</option>
+              <option>영어공부</option>
+              <option>기타</option>
+            </select>
+          </label>
+          <label>흐름 메모
+            <textarea id="flowInput" rows="5" placeholder="한 줄에 하나씩 적어주세요.&#10;예: Drawing and piano&#10;Drawing helps me express myself&#10;Piano helps me relax"></textarea>
+          </label>
+          <label>키워드
+            <input id="keywordsInput" type="text" placeholder="예: drawing / piano / process / relax" />
+          </label>
+          <label>영어 답변 스크립트
+            <textarea id="answerInput" rows="10" placeholder="영어 답변 전체를 붙여 넣어주세요." required></textarea>
+          </label>
+          <label>유사 질문
+            <textarea id="similarInput" rows="4" placeholder="한 줄에 하나씩 적어주세요. 비워도 됩니다."></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="primary-btn" type="submit">스크립트 저장</button>
+            <button class="ghost-btn" id="clearForm" type="button">입력 비우기</button>
+          </div>
+        </form>
+
+        <div class="section-title compact">
+          <h2>여러 개 한 번에 가져오기</h2>
+          <p>아래 형식으로 붙여 넣으면 여러 카드를 한 번에 추가할 수 있습니다.</p>
+        </div>
+        <div class="panel import-panel">
+          <pre class="sample">Q: Tell me about your hobbies.
+Category: 취미
+Flow:
+- Drawing and piano
+- Drawing helps me express myself
+Keywords: drawing / piano / process
+Answer:
+I enjoy drawing and playing the piano...
+Similar:
+- What do you do in your free time?
+- Tell me about your favorite hobby.
+---</pre>
+          <textarea id="bulkInput" rows="12" placeholder="여기에 여러 스크립트를 붙여 넣으세요."></textarea>
+          <button class="primary-btn" id="bulkImport" type="button">여러 개 가져오기</button>
+        </div>
+      </section>
+
+      <section class="view" id="reviewView">
+        <div class="section-title">
+          <h2>복습 목록</h2>
+          <p>즐겨찾기 또는 다시 연습이 필요한 스크립트가 여기에 모입니다.</p>
+        </div>
+        <div class="cards" id="reviewCards"></div>
+      </section>
+
+      <section class="view" id="progressView">
+        <div class="section-title">
+          <h2>학습 기록</h2>
+          <p>브라우저 저장소 기준으로 간단히 기록됩니다.</p>
+        </div>
+        <div class="panel progress-panel" id="progressPanel"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="practiceModal" aria-hidden="true">
+    <div class="dim" data-close="true"></div>
+    <section class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modalClose" type="button">×</button>
+      <p class="eyebrow" id="practiceMeta">말하기 연습</p>
+      <h2 id="practiceTitle">질문</h2>
+      <div class="timer" id="timer">01:00</div>
+      <p class="timer-msg" id="timerMsg">흐름을 보고 40초 이상 말해보세요.</p>
+      <div class="modal-flow" id="practiceFlow"></div>
+      <div class="modal-actions">
+        <button class="primary-btn" id="startTimer" type="button">타이머 시작</button>
+        <button class="ghost-btn" id="stopTimer" type="button">정지</button>
+        <button class="ghost-btn" id="resetTimer" type="button">리셋</button>
+      </div>
+      <div class="check-list">
+        <label><input type="checkbox" id="checkFlow" /> 흐름 순서를 따라 말했다</label>
+        <label><input type="checkbox" id="checkTime" /> 40초 이상 말했다</label>
+        <label><input type="checkbox" id="checkReview" /> 다시 연습이 필요하다</label>
+      </div>
+      <button class="primary-btn full" id="savePractice" type="button">연습 기록 저장</button>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
